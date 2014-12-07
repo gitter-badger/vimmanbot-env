@@ -1,0 +1,10 @@
+#mysqld_innodb_buffer_pool_size: 128M
+#mysqld_basedir: 
+#mysqld_datadir: 
+#mysqld_port: 
+#mysqld_server_id: 
+#mysqld_socket: 
+#mysqld_join_buffer_size: 128M
+#mysqld_sort_buffer_size: 2M
+#mysqld_read_rnd_buffer_size: 2M 
+mysqld_sql_mode: "" # "NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES"

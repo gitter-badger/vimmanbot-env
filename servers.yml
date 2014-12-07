@@ -1,0 +1,13 @@
+- hosts: servers
+  sudo: true
+  roles:
+    - test
+    - common
+    - vim
+    - iptables
+    - localtime
+    - mysql
+    - python
+    - flask
+    - uwsgi
+    - nginx

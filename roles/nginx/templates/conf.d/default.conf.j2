@@ -1,0 +1,28 @@
+server {
+    listen 80;
+    # listen 443 ssl;
+    server_name www.vimmanbot.local;
+
+    root /vagrant/src/vimmanbot-app/public;
+    index index.html;
+
+    access_log /var/log/nginx/www.vimmanbot.access.log;
+    error_log /var/log/nginx/www.vimmanbot.error.log warn;
+
+    # for Gzip
+    gzip on;
+    gzip_min_length 1024;
+    gzip_comp_level 4;
+    gzip_types text/plain text/css text/javascript application/x-javascript application/json;
+    gzip_disable "MSIE [1-6]\.";
+    gzip_disable "Mozilla/4";
+
+    ## for SSL
+    #ssl_certificate /vagrant/files/ssl/vimmanbot.local.crt;
+    #ssl_certificate_key /vagrant/files/ssl/vimmanbot.local.key;
+    #ssl_protocols SSLv3 TLSv1;
+    #ssl_ciphers RC4-SHA:HIGH:!ADH;
+    #ssl_prefer_server_ciphers on;
+    #ssl_session_cache shared:SSL:10m;
+    #ssl_session_timeout 10m;
+}

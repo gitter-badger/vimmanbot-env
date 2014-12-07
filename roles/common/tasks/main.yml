@@ -1,0 +1,3 @@
+- name: Update all package for Yum
+  yum: name=* state=latest
+

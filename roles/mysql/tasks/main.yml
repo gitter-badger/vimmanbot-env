@@ -1,0 +1,65 @@
+- name: Remove existing MySQL
+  command: yum erase -y mysql*
+
+- name: Install MySQL Compatibility Libraries
+  yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-shared-compat-5.6.20-1.el6.x86_64.rpm state=present
+
+- name: Install MySQL Server
+  yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-server-5.6.20-1.el6.x86_64.rpm state=present
+
+- name: Install MySQL Client
+  yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-client-5.6.20-1.el6.x86_64.rpm state=present
+
+- name: Install MySQL Shared
+  yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-shared-5.6.20-1.el6.x86_64.rpm state=present
+
+- name: Install MySQL Devel
+  yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-devel-5.6.20-1.el6.x86_64.rpm state=present
+
+## for EC2
+#- name: install DATA-Dumper
+#  yum: name=perl-Data-Dumper state=latest
+
+- name: Initialize MySQL
+  command: mysql_install_db --datadir=/var/lib/mysql/ --user=mysql
+
+- name: Create MySQL Data Directory
+  command: mkdir -p /var/log/mysql
+
+- name: Change Owner MySQL Data Directory
+  command: chown mysql.mysql /var/log/mysql
+
+- name: Build MySQL configuration file - my.cnf
+  template: src=../templates/my.cnf.j2 dest=/usr/my.cnf
+
+- name: Add to chkconfig
+  command: chkconfig mysql on
+
+- name: Restart MySQL Server
+  service: state=restarted name=mysql
+
+- name: Set Stat .mysql_secret file
+  stat: path=/root/.mysql_secret
+  register: _MYSQL_SECRET_FILE
+
+- name: _MYSQL_SECRET_FILE.stat is ...
+  debug: msg="Exists .mysql_secret file"
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+
+- name: Get Default Password
+  shell: command cat /root/.mysql_secret | sed -e 's/.*\:\s//g' | tr -d '\n'
+  register: _MYSQL_DEFAULT_PASSWORD
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+
+- name: _MYSQL_DEFAULT_PASSWORD is ...
+  debug: msg="{{ _MYSQL_DEFAULT_PASSWORD.stdout }}"
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+
+- name: Change Password
+  command: mysqladmin -uroot -p"{{ _MYSQL_DEFAULT_PASSWORD.stdout }}" password ""
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+
+- name: Remove .mysql_secret
+  shell: rm /root/.mysql_secret
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+

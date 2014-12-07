@@ -1,0 +1,75 @@
+- name: Install Libraries for Python
+  yum: name={{ item }} state=installed
+  with_items:
+    - zlib-devel
+    - bzip2-devel
+    - openssl-devel
+    - ncurses-devel
+    - sqlite-devel
+    - readline-devel
+    - tk-devel
+    - gdbm-devel
+    - db4-devel
+    - libpcap-devel
+    - xz-devel
+  tags: common-packages
+
+
+# Python
+- name: Set Stat Python Binary file
+  stat: path=/opt/local/bin/python2.7
+  register: _PYTHON_BIN_FILE
+
+- name: Make Directory
+  command: mkdir -p /usr/local/src/
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+- name: Get Python 2.7.8 source
+  get_url: url="https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz" dest=/usr/local/src/Python-2.7.8.tgz
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+- name: Uncompress Python source file
+  command: tar xfz /usr/local/src/Python-2.7.8.tgz chdir=/usr/local/src/ creates=/usr/local/src/Python-2.7.8
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+- name: Configure Python
+  command: ./configure --prefix=/opt/local chdir=/usr/local/src/Python-2.7.8
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+- name: Make Python
+  command: make chdir=/usr/local/src/Python-2.7.8
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+- name: Make Alt Install Python
+  command: make altinstall chdir=/usr/local/src/Python-2.7.8
+  when: _PYTHON_BIN_FILE.stat.exists == false
+
+
+# easy_install
+- name: Set Stat easy_install file
+  stat: path=/opt/local/bin/easy_install-2.7
+  register: _EASY_INSTALL_BIN_FILE
+
+- name: Get Python Distribute source
+  get_url: url="https://pypi.python.org/packages/source/d/distribute/distribute-0.6.49.tar.gz" dest=/usr/local/src/distribute-0.6.49.tar.gz
+  when: _EASY_INSTALL_BIN_FILE.stat.exists == false
+
+- name: Uncompress Python Distribute source file
+  command: tar xfz /usr/local/src/distribute-0.6.49.tar.gz chdir=/usr/local/src/ creates=/usr/local/src/distribute-0.6.49
+  when: _EASY_INSTALL_BIN_FILE.stat.exists == false
+
+- name: Make Python
+  command: /opt/local/bin/python2.7 /usr/local/src/distribute-0.6.49/setup.py install
+  when: _EASY_INSTALL_BIN_FILE.stat.exists == false
+
+
+# Pip
+- name: Set Stat pip file
+  stat: path=/opt/local/bin/pip2.7
+  register: _PIP_BIN_FILE
+
+- name: Install Pip
+  command: /opt/local/bin/easy_install-2.7 pip
+  when: _PIP_BIN_FILE.stat.exists == false
+
+

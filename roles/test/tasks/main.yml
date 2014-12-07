@@ -1,0 +1,26 @@
+- name: Create file
+  shell: touch /home/vagrant/.test
+
+- name: Stat file
+  stat: path=/home/vagrant/.test
+  register: TEST_FILE_STAT1
+
+- debug: msg="[1] Exists file"
+  when: TEST_FILE_STAT1.stat.exists == true
+
+- debug: msg="[1] Not Exists file"
+  when: TEST_FILE_STAT1.stat.exists == false
+
+- name: Remove file
+  shell: rm /home/vagrant/.test
+
+- name: Stat file
+  stat: path=/home/vagrant/.test
+  register: TEST_FILE_STAT2
+
+- debug: msg="[2] Exists file"
+  when: TEST_FILE_STAT2.stat.exists == true
+
+- debug: msg="[2] Not Exists file"
+  when: TEST_FILE_STAT2.stat.exists == false
+

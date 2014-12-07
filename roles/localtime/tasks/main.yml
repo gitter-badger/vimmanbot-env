@@ -1,0 +1,6 @@
+- name: Backup default localtime file  
+  command: mv /etc/localtime /etc/localtime_bk
+
+- name: Setup Japan localtime
+  command: cp /usr/share/zoneinfo/Japan /etc/localtime
+

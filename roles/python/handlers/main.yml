@@ -1,0 +1,9 @@
+- name: restarting iptables
+  service: name=iptables state=restarted enabled=yes
+
+- name: restarting network
+  service: name=network state=restarted enabled=yes
+
+- name: start jenkins service
+  service: name=jenkins state=started
+

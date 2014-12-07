@@ -1,0 +1,4 @@
+
+- name: Install Flask via Pip
+  command: /opt/local/bin/pip2.7 install flask
+
