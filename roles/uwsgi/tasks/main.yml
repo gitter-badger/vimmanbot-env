@@ -2,3 +2,14 @@
 - name: Install uWSGI via Pip
   command: /opt/local/bin/pip2.7 install uwsgi
 
+- name: Symbolic Link uWSGI
+  command: ln -s -f /opt/local/bin/uwsgi /usr/bin/uwsgi
+
+- name: Prepare /var/uwsgi
+  command: mkdir /var/uwsgi && chmod 0777 /var/uwsgi
+
+- name: Prepare /var/log/uwsgi
+  command: mkdir /var/log/uwsgi && chmod 0777 /var/log/uwsgi
+
+
+

@@ -73,3 +73,14 @@
   when: _PIP_BIN_FILE.stat.exists == false
 
 
+- name: Symbolic Link Python
+  command: ln -s -f /opt/local/bin/python2.7 /usr/bin/python
+
+- name: Symbolic Link easy_install
+  command: ln -s -f /opt/local/bin/easy_install-2.7 /usr/bin/easy_install
+
+- name: Symbolic Link Pip
+  command: ln -s -f /opt/local/bin/pip2.7 /usr/bin/pip
+
+
+
