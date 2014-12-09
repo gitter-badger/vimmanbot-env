@@ -11,9 +11,9 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 - CentOS 6.5
 - MySQL 5.6
 - Nginx 1.7
-- uWSGI
+- uWSGI 2.0.8
 - Python 2.7
-- Flask 
+- Flask 0.10.1
 
 
 2. サポート環境
