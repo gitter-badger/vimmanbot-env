@@ -32,10 +32,12 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 サポート環境を満たした上で、下記を実行してください。
 
 
-### 3.1. ソースをクローンする
+### 3.1. 構成管理のソースを設置する
 
-    $ git clone xxxxxxxx
-    $ cd xxxxxxxx
+[https://github.com/OMOSAN/vimmanbot-env](https://github.com/OMOSAN/vimmanbot-env) をフォークし、ソースをクローンします。
+
+    $ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-env.git
+    $ cd vimmanbot-env
 
 
 ### 3.2. 必要な Gem をインストールする
@@ -43,7 +45,26 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
     $ bundle install --path vendor/bundle
 
 
-### 3.3. 仮想環境を構築する
+### 3.3. アプリケーションのソースを設置する
+
+[https://github.com/OMOSAN/vimmanbot-app](https://github.com/OMOSAN/vimmanbot-app) をフォークし、ソースをクローンします。
+
+    $ cd /path/to/vimmanbot-env
+    $ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-app.git src/vimmanbot-app
+
+
+### 3.4. 仮想環境のアドレスを設定する
+
+サンプルの環境変数設定をコピーします。
+
+    $ cp .env.sample .env
+
+そのファイルの中の `VIMMANBOT_LOCAL_ENV_PRIVATE_IP` というアドレスを決める環境変数を適当なものに設定します。
+
+    export VIMMANBOT_LOCAL_ENV_PRIVATE_IP='192.168.52.101'
+
+
+### 3.5. 仮想環境を構築する
 
     $ source .env && bundle exec vagrant up
 

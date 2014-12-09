@@ -5,11 +5,10 @@
 - name: Symbolic Link uWSGI
   command: ln -s -f /opt/local/bin/uwsgi /usr/bin/uwsgi
 
-- name: Prepare /var/uwsgi
-  command: mkdir /var/uwsgi && chmod 0777 /var/uwsgi
+- name: Prepare pid warehouse /var/run/uwsgi
+  command: mkdir /var/run/uwsgi && chmod 0777 /var/run/uwsgi
 
-- name: Prepare /var/log/uwsgi
+- name: Prepare log warehouse /var/log/uwsgi
   command: mkdir /var/log/uwsgi && chmod 0777 /var/log/uwsgi
-
 
 
