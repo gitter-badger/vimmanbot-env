@@ -2,12 +2,12 @@
   sudo: true
   roles:
     - test
-    #- common
+    - common
     - vim
     - iptables
     - localtime
     - mysql
+    - nginx
     - python
     - flask
     - uwsgi
-    - nginx

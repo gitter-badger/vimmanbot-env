@@ -1,3 +1,4 @@
+
 - name: Install Vim
   yum: state=latest name=vim
 
