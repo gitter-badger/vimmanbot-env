@@ -93,7 +93,7 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 
 virtualenv セットを作ります。
 
-    $ cd /vagrant/src/irolink-app/
+    $ cd /vagrant/src/vimmanbot-app/
     $ mkdir /vagrant/src/vimmanbot-app/src/api/.venv/
     $ virtualenv --python=`which python2.7` /vagrant/src/vimmanbot-app/src/api/.venv/
 
