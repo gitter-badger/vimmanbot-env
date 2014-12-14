@@ -1,3 +1,4 @@
+
 - name: Install Libraries for Python
   yum: name={{ item }} state=installed
   with_items:
@@ -12,10 +13,11 @@
     - db4-devel
     - libpcap-devel
     - xz-devel
+    - python-devel
   tags: common-packages
 
 
-# Python
+# python
 - name: Set Stat Python Binary file
   stat: path=/opt/local/bin/python2.7
   register: _PYTHON_BIN_FILE
@@ -59,28 +61,35 @@
   when: _EASY_INSTALL_BIN_FILE.stat.exists == false
 
 - name: Make Python
+  command: python2.6 /usr/local/src/distribute-0.6.49/setup.py install
+  when: _EASY_INSTALL_BIN_FILE.stat.exists == false
+
+- name: Make Python
   command: /opt/local/bin/python2.7 /usr/local/src/distribute-0.6.49/setup.py install
   when: _EASY_INSTALL_BIN_FILE.stat.exists == false
 
 
-# Pip
+# pip
 - name: Set Stat pip file
   stat: path=/opt/local/bin/pip2.7
   register: _PIP_BIN_FILE
 
-- name: Install Pip
+- name: Install Pip with easy_install 2.7
   command: /opt/local/bin/easy_install-2.7 pip
   when: _PIP_BIN_FILE.stat.exists == false
 
+- name: Install Pip with easy_install 2.6
+  command: easy_install pip
 
+
+# Symbolic Link
 - name: Symbolic Link Python
-  command: ln -s -f /opt/local/bin/python2.7 /usr/bin/python
+  command: ln -s -f /opt/local/bin/python2.7 /usr/bin/python2.7
 
 - name: Symbolic Link easy_install
-  command: ln -s -f /opt/local/bin/easy_install-2.7 /usr/bin/easy_install
+  command: ln -s -f /opt/local/bin/easy_install-2.7 /usr/bin/easy_install-2.7
 
 - name: Symbolic Link Pip
-  command: ln -s -f /opt/local/bin/pip2.7 /usr/bin/pip
-
+  command: ln -s -f /opt/local/bin/pip2.7 /usr/bin/pip2.7
 
 

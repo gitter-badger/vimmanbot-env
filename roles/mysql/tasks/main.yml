@@ -1,42 +1,50 @@
+
+- name: Set Stat .mysql_secret file
+  stat: path=/root/.mysql_installed
+  register: _MYSQL_INSTALLED_FILE
+
 - name: Remove existing MySQL
   command: yum erase -y mysql*
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Install MySQL Compatibility Libraries
   yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-shared-compat-5.6.20-1.el6.x86_64.rpm state=present
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Install MySQL Server
   yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-server-5.6.20-1.el6.x86_64.rpm state=present
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Install MySQL Client
   yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-client-5.6.20-1.el6.x86_64.rpm state=present
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Install MySQL Shared
   yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-shared-5.6.20-1.el6.x86_64.rpm state=present
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Install MySQL Devel
   yum: name=http://dev.mysql.com/get/Downloads/MySQL-5.6/MySQL-devel-5.6.20-1.el6.x86_64.rpm state=present
-
-## for EC2
-#- name: install DATA-Dumper
-#  yum: name=perl-Data-Dumper state=latest
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Initialize MySQL
   command: mysql_install_db --datadir=/var/lib/mysql/ --user=mysql
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Create MySQL Data Directory
   command: mkdir -p /var/log/mysql
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Change Owner MySQL Data Directory
   command: chown mysql.mysql /var/log/mysql
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Build MySQL configuration file - my.cnf
   template: src=../templates/my.cnf.j2 dest=/usr/my.cnf
-
-- name: Add to chkconfig
-  command: chkconfig mysql on
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Restart MySQL Server
-  service: state=restarted name=mysql
+  service: state=restarted name=mysql enabled=yes
 
 - name: Set Stat .mysql_secret file
   stat: path=/root/.mysql_secret
@@ -57,6 +65,10 @@
 
 - name: Change Password
   command: mysqladmin -uroot -p"{{ _MYSQL_DEFAULT_PASSWORD.stdout }}" password ""
+  when: _MYSQL_SECRET_FILE.stat.exists == true
+
+- name: Create .mysql_installed file
+  shell: touch /root/.mysql_installed
   when: _MYSQL_SECRET_FILE.stat.exists == true
 
 - name: Remove .mysql_secret

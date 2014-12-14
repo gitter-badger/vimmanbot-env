@@ -80,11 +80,43 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 5. ホスト側での開発
 -------------------
 
+### ソースの自動同期
+
 ホスト側でソースを修正し、ゲスト側に反映するには、反映する度に手動で修正した対象ファイルをゲスト側に配置するか、修正したことを自動で検知し、検知したタイミングでゲスト側に同期する方法があります。
 
 自動でゲスト側に同期するには下記のコマンドを実行してください。
 
     $ bundle exec vagrant rsync-auto
+
+
+### アプリのブラウザ経由での動作確認
+
+virtualenv セットを作ります。
+
+    $ cd /vagrant/src/irolink-app/
+    $ mkdir /vagrant/src/vimmanbot-app/src/api/.venv/
+    $ virtualenv --python=`which python2.7` /vagrant/src/vimmanbot-app/src/api/.venv/
+
+virtualenv を参照します。
+
+    $ source .venv/bin/activate
+
+Pip 経由でライブラリをインストールします。
+
+    (.venv)$ pip install -r src/api/requirements.txt
+
+データベースを設定します。
+
+    (.venv)$ mysql -u root < src/api/data/sql/mysql_createdb.sql
+    (.venv)$ mysql -u root vimmanbot < src/api/data/sql/mysql_schema.sql
+    (.venv)$ cp src/api/config/databases.py.sample src/api/config/databases.py
+
+uWSGI 経由でアプリを起動します。
+
+    (.venv)$ uwsgi --ini /vagrant/src/vimmanbot-app/src/api/config/uwsgi/uwsgi-local-api.ini
+
+お使いのブラウザで `www.vimmanbot.local` にアクセスします。  
+ex) `http://www.vimmanbot.local/api/questions`
 
 
 6. その他 Tips

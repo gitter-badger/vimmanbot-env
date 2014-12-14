@@ -1,14 +1,35 @@
 
 - name: Install uWSGI via Pip
-  command: /opt/local/bin/pip2.7 install uwsgi
+  #command: /opt/local/bin/pip2.7 install uwsgi
+  command: pip install uwsgi
 
-- name: Symbolic Link uWSGI
-  command: ln -s -f /opt/local/bin/uwsgi /usr/bin/uwsgi
+- name: Install virtualenv via Pip
+  command: pip install virtualenv
+
+#- name: Symbolic Link uWSGI
+#  command: ln -s -f /opt/local/bin/uwsgi /usr/bin/uwsgi
+
+- name: Set Stat
+  stat: path=/var/run/uwsgi/
+  register: _TEMP_UWSGI_RUN_DIR
 
 - name: Prepare pid warehouse /var/run/uwsgi
-  command: mkdir -f /var/run/uwsgi && chmod 0777 /var/run/uwsgi
+  command: mkdir -p /var/run/uwsgi
+  when: _TEMP_UWSGI_RUN_DIR.stat.exists == false
+
+- name: Prepare pid warehouse /var/run/uwsgi
+  command: chmod 0777 /var/run/uwsgi
+  when: _TEMP_UWSGI_RUN_DIR.stat.exists == false
+
+- name: Set Stat
+  stat: path=/var/log/uwsgi/
+  register: _TEMP_UWSGI_LOG_DIR
 
 - name: Prepare log warehouse /var/log/uwsgi
-  command: mkdir -f /var/log/uwsgi && chmod 0777 /var/log/uwsgi
+  command: mkdir -p /var/log/uwsgi
+  when: _TEMP_UWSGI_LOG_DIR.stat.exists == false
 
+- name: Prepare log warehouse /var/log/uwsgi
+  command: chmod 0777 /var/log/uwsgi
+  when: _TEMP_UWSGI_LOG_DIR.stat.exists == false
 

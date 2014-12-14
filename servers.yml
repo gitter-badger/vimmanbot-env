@@ -9,5 +9,5 @@
     - mysql
     - nginx
     - python
-    - flask
+    #- flask
     - uwsgi
