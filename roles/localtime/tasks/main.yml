@@ -1,3 +1,4 @@
+
 - name: Backup default localtime file  
   command: mv /etc/localtime /etc/localtime_bk
 
