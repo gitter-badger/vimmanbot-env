@@ -1,7 +1,12 @@
+---
+# file: roles/mysql/tasks/main.yml
 
-- name: Set Stat .mysql_secret file
-  stat: path=/root/.mysql_installed
+- name: Set Stat .mysql_installed file
+  stat: path=/root/mysql_installed.txt
   register: _MYSQL_INSTALLED_FILE
+
+- name: Debug _MYSQL_INSTALLED_FILE
+  debug: msg="{{ _MYSQL_INSTALLED_FILE.stat.exists }}"
 
 - name: Remove existing MySQL
   command: yum erase -y mysql*
@@ -52,26 +57,32 @@
 
 - name: _MYSQL_SECRET_FILE.stat is ...
   debug: msg="Exists .mysql_secret file"
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Get Default Password
   shell: command cat /root/.mysql_secret | sed -e 's/.*\:\s//g' | tr -d '\n'
   register: _MYSQL_DEFAULT_PASSWORD
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: _MYSQL_DEFAULT_PASSWORD is ...
   debug: msg="{{ _MYSQL_DEFAULT_PASSWORD.stdout }}"
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Change Password
   command: mysqladmin -uroot -p"{{ _MYSQL_DEFAULT_PASSWORD.stdout }}" password ""
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Create .mysql_installed file
-  shell: touch /root/.mysql_installed
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  shell: touch /root/mysql_installed.txt
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 
 - name: Remove .mysql_secret
   shell: rm /root/.mysql_secret
-  when: _MYSQL_SECRET_FILE.stat.exists == true
+  #when: _MYSQL_SECRET_FILE.stat.exists == true
+  when: _MYSQL_INSTALLED_FILE.stat.exists == false
 

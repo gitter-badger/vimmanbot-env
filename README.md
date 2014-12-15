@@ -93,6 +93,7 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 
 virtualenv セットを作ります。
 
+    $ bundle exec vagrant rsync-auto
     $ cd /vagrant/src/vimmanbot-app/
     $ mkdir /vagrant/src/vimmanbot-app/src/api/.venv/
     $ virtualenv --python=`which python2.7` /vagrant/src/vimmanbot-app/src/api/.venv/
