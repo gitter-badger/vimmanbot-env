@@ -100,7 +100,7 @@ virtualenv を参照します。
 
 Pip 経由でライブラリをインストールします。
 
-    (.venv)$ pip install -r src/api/requirements.txt
+    (.venv)$ sudo pip install -r src/api/requirements.txt
 
 データベースを設定します。
 
