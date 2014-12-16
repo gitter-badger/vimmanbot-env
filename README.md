@@ -62,7 +62,8 @@ SSH 接続を設定します。
 
 仮想環境を構築します。
 
-    $ source .env && bundle exec vagrant up
+    $ source .env
+    $ bundle exec vagrant up && bundle exec ansible-playbook -i local site.yml
 
 
 4. 環境の資格情報
