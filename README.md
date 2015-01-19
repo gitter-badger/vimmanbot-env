@@ -1,6 +1,8 @@
 Vimmanbot + Vagrant (for Vimmanbot development environment)
 ===========================================================
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OMOSAN/vimmanbot-env?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 これは Vimmanbot の開発のために必要なツールを標準で搭載した Vagrant セットアップです。
 
