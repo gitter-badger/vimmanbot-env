@@ -1,6 +1,8 @@
 Vimmanbot + Vagrant (for Vimmanbot development environment)
 ===========================================================
 
+[![Join the chat at https://gitter.im/OMOSAN/vimman-env](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OMOSAN/vimman-env?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 これは Vimmanbot の開発のために必要なツールを標準で搭載した Vagrant セットアップです。
 
@@ -34,23 +36,23 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 構成管理のソースを設置します。  
 [https://github.com/OMOSAN/vimmanbot-env](https://github.com/OMOSAN/vimmanbot-env) をフォークし、ソースをクローンします。
 
-    $ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-env.git
-    $ cd vimmanbot-env
+    [host]$ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-env.git
+    [host]$ cd vimmanbot-env
 
 必要な Gem をインストールします。
 
-    $ bundle install --path vendor/bundle
+    [host]$ bundle install --path vendor/bundle
 
 アプリケーションのソースを設置します。  
 [https://github.com/OMOSAN/vimmanbot-app](https://github.com/OMOSAN/vimmanbot-app) をフォークし、ソースをクローンします。
 
-    $ cd /path/to/vimmanbot-env
-    $ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-app.git src/vimmanbot-app
+    [host]$ cd /path/to/vimmanbot-env
+    [host]$ git clone git@github.com:{YOUR GITHUB USERNAME}/vimmanbot-app.git src/vimmanbot-app
 
 仮想環境のアドレスを設定します。  
 サンプルの環境変数設定をコピーします。
 
-    $ cp .env.sample .env
+    [host]$ cp .env.sample .env
 
 そのファイルの中の `VIMMANBOT_LOCAL_ENV_PRIVATE_IP` というアドレスを決める環境変数を適当なものに設定します。
 
@@ -58,18 +60,18 @@ Vimmanbot + Vagrant (for Vimmanbot development environment)
 
 SSH 接続を設定します。
 
-    $ cat files/ssh/config >> ~/.ssh/config
+    [host]$ cat files/ssh/config >> ~/.ssh/config
 
 仮想環境を構築します。
 
-    $ source .env
-    $ bundle exec vagrant up && bundle exec ansible-playbook -i local site.yml
+    [host]$ source .env
+    [host]$ bundle exec vagrant up && bundle exec ansible-playbook -i local site.yml
 
 
 4. 環境の資格情報
 -----------------
 
-- Host Address: .env で設定したアドレス
+- Guest Server Address: `.env` で設定したアドレス
 - SSH: vagrant / vagrant
 - MySQL: root / (none)
 
@@ -81,23 +83,23 @@ SSH 接続を設定します。
 
 ホスト側でソースを修正し、ゲスト側に反映するには、反映する度に手動で修正した対象ファイルをゲスト側に配置するか、修正したことを自動で検知し、検知したタイミングでゲスト側に同期する方法があります。
 
-自動でゲスト側に同期するには下記のコマンドを実行してください。
+ホスト側のファイルを自動でゲスト側に同期するには下記のコマンドを実行してください。
 
-    $ bundle exec vagrant rsync-auto
+    [host]$ bundle exec vagrant rsync-auto
 
 
 ### アプリのブラウザ経由での動作確認
 
 virtualenv セットを作ります。
 
-    $ bundle exec vagrant rsync-auto
-    $ cd /vagrant/src/vimmanbot-app/
-    $ mkdir /vagrant/src/vimmanbot-app/src/api/.venv/
-    $ virtualenv --python=`which python2.7` /vagrant/src/vimmanbot-app/src/api/.venv/
+    [host]$ bundle exec vagrant ssh
+    [guest]$ cd /vagrant/src/vimmanbot-app/
+    [guest]$ mkdir ~/.venv/
+    [guest]$ virtualenv --python=`which python2.7` ~/.venv/
 
 virtualenv を参照します。
 
-    $ source .venv/bin/activate
+    [guest]$ source ~/.venv/bin/activate
 
 Pip 経由でライブラリをインストールします。
 
@@ -111,7 +113,7 @@ Pip 経由でライブラリをインストールします。
 
 uWSGI 経由でアプリを起動します。
 
-    (.venv)$ uwsgi --ini /vagrant/src/vimmanbot-app/src/api/config/uwsgi/uwsgi-local-api.ini
+    (.venv)$ uwsgi --ini src/api/config/uwsgi/uwsgi-local-api.ini --py-autoreload 1
 
 お使いのブラウザで `www.vimmanbot.local` にアクセスします。  
 ex) `http://www.vimmanbot.local/api/questions`
